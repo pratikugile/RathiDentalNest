@@ -1,27 +1,52 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, PermissionsAndroid, Platform } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, PermissionsAndroid, Platform, Image } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-import RNFS from 'react-native-fs';
+import RNFS, { ReadDirItem } from 'react-native-fs';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
-// Video item component for the grid
-const VideoItem = ({ item, onPress, colors }) => {
+interface VideoItemProps {
+  item: ReadDirItem;
+  onPress: (item: ReadDirItem) => void;
+  colors: any;
+}
+
+// Video item component for the grid (YouTube style)
+const VideoItem = ({ item, onPress, colors }: VideoItemProps) => {
   const styles = themedStyles(colors);
+  
+  // Format file size
+  const formatFileSize = (bytes: number) => {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+  };
+
   return (
-    <TouchableOpacity style={styles.videoItem} onPress={() => onPress(item)}>
-      <View style={styles.thumbnail} />
-      <View style={styles.videoInfo}>
-        <View style={styles.videoTextContainer}>
-          <Text style={styles.videoTitle}>{item.name}</Text>
+    <TouchableOpacity style={styles.videoCard} onPress={() => onPress(item)}>
+      <View style={styles.thumbnailContainer}>
+        <View style={styles.thumbnail}>
+          <Icon name="play-circle-filled" size={48} color="rgba(255, 255, 255, 0.9)" />
+        </View>
+        <View style={styles.videoDuration}>
+          <Text style={styles.durationText}>Video</Text>
+        </View>
+      </View>
+      <View style={styles.videoDetails}>
+        <View style={styles.videoInfo}>
+          <Text style={styles.videoTitle} numberOfLines={2}>{item.name.replace('.mp4', '')}</Text>
+          <View style={styles.metaInfo}>
+            <Text style={styles.metaText}>{formatFileSize(item.size)}</Text>
+          </View>
         </View>
       </View>
     </TouchableOpacity>
   );
 }
 
-function HomeScreen({ navigation }) {
+function HomeScreen({ navigation }: any) {
   const { colors } = useTheme();
   const styles = themedStyles(colors);
-  const [videos, setVideos] = useState([]);
+  const [videos, setVideos] = useState<ReadDirItem[]>([]);
 
   useEffect(() => {
     const scanForVideos = async () => {
@@ -54,7 +79,7 @@ function HomeScreen({ navigation }) {
     scanForVideos();
   }, []);
 
-  const handleVideoPress = (video) => {
+  const handleVideoPress = (video: ReadDirItem) => {
     navigation.navigate('VideoPlayer', { videoPath: video.path });
   };
 
@@ -65,8 +90,9 @@ function HomeScreen({ navigation }) {
           data={videos}
           renderItem={({ item }) => <VideoItem item={item} onPress={handleVideoPress} colors={colors} />}
           keyExtractor={(item) => item.path}
-          numColumns={2}
-          style={styles.videoGrid}
+          numColumns={1}
+          style={styles.videoList}
+          showsVerticalScrollIndicator={false}
         />
       ) : (
         <View style={styles.emptyContainer}>
@@ -78,48 +104,81 @@ function HomeScreen({ navigation }) {
   );
 }
 
-const themedStyles = (colors) => StyleSheet.create({
+const themedStyles = (colors: any) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
   },
-  videoGrid: {
+  videoList: {
     flex: 1,
-    padding: 5,
   },
-  videoItem: {
-    flex: 1,
-    margin: 5,
+  videoCard: {
+    backgroundColor: colors.card,
+    marginBottom: 16,
+    borderRadius: 0,
+  },
+  thumbnailContainer: {
+    position: 'relative',
+    width: '100%',
+    aspectRatio: 16 / 9,
+    backgroundColor: '#000',
   },
   thumbnail: {
     width: '100%',
-    height: 100,
-    backgroundColor: colors.card, // Use card color for placeholder
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: colors.border,
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+  },
+  videoDuration: {
+    position: 'absolute',
+    bottom: 8,
+    right: 8,
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
+  durationText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  videoDetails: {
+    padding: 12,
+    flexDirection: 'row',
   },
   videoInfo: {
-    flexDirection: 'row',
-    marginTop: 8,
-  },
-  videoTextContainer: {
     flex: 1,
   },
   videoTitle: {
     color: colors.text,
     fontSize: 14,
     fontWeight: '500',
+    lineHeight: 20,
+    marginBottom: 4,
+  },
+  metaInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  metaText: {
+    color: colors.text,
+    opacity: 0.6,
+    fontSize: 12,
   },
   emptyContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    padding: 20,
   },
   emptyText: {
     color: colors.text,
     opacity: 0.7,
     fontSize: 16,
+    textAlign: 'center',
+    marginBottom: 8,
   },
 });
 

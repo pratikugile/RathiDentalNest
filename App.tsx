@@ -19,6 +19,7 @@ import LoginScreen from './src/screens/LoginScreen';
 import AdminDashboardScreen from './src/screens/admin/AdminDashboardScreen';
 import ManageGalleryScreen from './src/screens/admin/ManageGalleryScreen';
 import AddGalleryItemScreen from './src/screens/admin/AddGalleryItemScreen';
+import CustomDrawerContent from './src/components/CustomDrawerContent';
 
 // Define context types
 interface ThemeContextType {
@@ -45,99 +46,94 @@ const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
 
 // --- Themes ---
-const LightAppTheme = { ...DefaultTheme, colors: { ...DefaultTheme.colors, background: '#f0f2f5', card: '#ffffff', text: '#0f0f0f', border: '#dcdcdc', primary: '#000' } };
-const DarkAppTheme = { ...DarkTheme, colors: { ...DarkTheme.colors, background: '#0f0f0f', card: '#212121', text: '#ffffff', border: '#272727', primary: '#fff' } };
-
-// --- Custom Drawer for Collapsed View ---
-const CustomDrawerContent = (props: any) => {
-  const { state, descriptors, navigation, isCollapsed } = props;
-
-  if (!isCollapsed) {
-    return (
-      <DrawerContentScrollView {...props}>
-        <DrawerItemList {...props} />
-      </DrawerContentScrollView>
-    );
-  }
-
-  return (
-    <DrawerContentScrollView {...props}>
-      {state.routes.map((route: any, index: number) => {
-        const { options } = descriptors[route.key];
-        if (options.drawerItemStyle && options.drawerItemStyle.height === 0) return null;
-
-        const isFocused = state.index === index;
-        const onPress = () => {
-          const event = navigation.emit({ type: 'drawerItemPress', target: route.key, canPreventDefault: true });
-          if (!isFocused && !event.defaultPrevented) navigation.navigate(route.name);
-        };
-
-        const color = isFocused ? options.drawerActiveTintColor : options.drawerInactiveTintColor;
-        const backgroundColor = isFocused ? options.drawerActiveBackgroundColor : 'transparent';
-        const icon = options.drawerIcon ? options.drawerIcon({ focused: isFocused, size: 24, color }) : null;
-
-        return (
-          <TouchableOpacity key={route.key} onPress={onPress} style={[styles.collapsedDrawerItem, { backgroundColor }]}>
-            {icon}
-          </TouchableOpacity>
-        );
-      })}
-    </DrawerContentScrollView>
-  );
+const LightAppTheme = { 
+  ...DefaultTheme, 
+  colors: { 
+    ...DefaultTheme.colors, 
+    background: '#f9f9f9', 
+    card: '#ffffff', 
+    text: '#030303', 
+    border: '#f2f2f2', 
+    primary: '#065fd4' 
+  } 
+};
+const DarkAppTheme = { 
+  ...DarkTheme, 
+  colors: { 
+    ...DarkTheme.colors, 
+    background: '#0f0f0f', 
+    card: '#1a1a1a', 
+    text: '#f1f1f1', 
+    border: '#272727', 
+    primary: '#3ea6ff' 
+  } 
 };
 
 // --- User App (Drawer Navigator) ---
 function UserApp() {
   const { width } = useWindowDimensions();
   const isLargeScreen = width >= 768;
-  const [isDrawerCollapsed, setDrawerCollapsed] = useState(isLargeScreen);
   const themeContext = useContext(ThemeContext);
-  
+
   if (!themeContext) {
     throw new Error('ThemeContext not found');
   }
-  
+
   const { toggleTheme, isDarkTheme } = themeContext;
 
   return (
     <Drawer.Navigator
       initialRouteName="Home"
-      drawerContent={(props) => <CustomDrawerContent {...props} isCollapsed={isLargeScreen && isDrawerCollapsed} />}
+      drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={({ navigation }) => ({        
         drawerType: isLargeScreen ? 'permanent' : 'front',
-        drawerStyle: { width: isLargeScreen ? (isDrawerCollapsed ? 80 : 240) : 240, backgroundColor: isDarkTheme ? '#212121' : '#fff' },
-        headerStyle: { elevation: 0, shadowOpacity: 0, borderBottomWidth: 1, borderBottomColor: isDarkTheme ? '#272727' : '#dcdcdc', backgroundColor: isDarkTheme ? '#0f0f0f' : '#f0f2f5' },
-        headerTintColor: isDarkTheme ? '#fff' : '#000',
+        drawerStyle: { 
+          width: isLargeScreen ? 88 : 240, // compact width on large screens
+          backgroundColor: isDarkTheme ? DarkAppTheme.colors.card : LightAppTheme.colors.card,
+          borderRightWidth: 1,
+          borderRightColor: isDarkTheme ? DarkAppTheme.colors.border : LightAppTheme.colors.border,
+        },
+        headerStyle: { 
+          elevation: 0, 
+          shadowOpacity: 0, 
+          borderBottomWidth: 1,
+          borderBottomColor: isDarkTheme ? DarkAppTheme.colors.border : LightAppTheme.colors.border,
+          backgroundColor: isDarkTheme ? DarkAppTheme.colors.card : LightAppTheme.colors.card,
+        },
+        headerTintColor: isDarkTheme ? '#f1f1f1' : '#030303',
         headerLeft: () => (
           <View style={styles.headerLeftContainer}>
-            <TouchableOpacity onPress={() => { if (isLargeScreen) setDrawerCollapsed(!isDrawerCollapsed); else navigation.toggleDrawer(); }} style={styles.menuButton}>
-              <MaterialCommunityIcons name="menu" color={isDarkTheme ? '#fff' : '#000'} size={25} />
-            </TouchableOpacity>
-            <Image source={require('./src/assets/logoRathi-light.png')} style={styles.logoImage} />
+            {!isLargeScreen && (
+              <TouchableOpacity onPress={() => navigation.toggleDrawer()} style={styles.menuButton}>
+                <MaterialCommunityIcons name="menu" color={isDarkTheme ? '#f1f1f1' : '#030303'} size={24} />
+              </TouchableOpacity>
+            )}
+            {isLargeScreen && (
+              <Image source={require('./src/assets/logoRathi-light.png')} style={styles.logoImage} />
+            )}
           </View>
         ),
         headerRight: () => (
           <View style={styles.headerRightContainer}>
             <TouchableOpacity style={styles.headerButton} onPress={toggleTheme}>
-              <MaterialCommunityIcons name="theme-light-dark" color={isDarkTheme ? '#fff' : '#000'} size={25} />
+              <MaterialCommunityIcons name={isDarkTheme ? 'white-balance-sunny' : 'moon-waning-crescent'} color={isDarkTheme ? '#fff' : '#000'} size={24} />
             </TouchableOpacity>
             <TouchableOpacity style={styles.headerButton}>
-              <MaterialCommunityIcons name="bell-outline" color={isDarkTheme ? '#fff' : '#000'} size={25} />
+              <MaterialCommunityIcons name="bell-outline" color={isDarkTheme ? '#fff' : '#000'} size={24} />
             </TouchableOpacity>
-            <Image source={{ uri: 'https://i.pravatar.cc/150?u=profile' }} style={styles.profileAvatar} />
+            <TouchableOpacity style={styles.profileButton}>
+              <Image source={{ uri: 'https://i.pravatar.cc/150?u=profile' }} style={styles.profileAvatar} />
+            </TouchableOpacity>
           </View>
         ),
-        drawerActiveTintColor: isDarkTheme ? '#fff' : '#000',
-        drawerInactiveTintColor: '#aaa',
-        drawerActiveBackgroundColor: isDarkTheme ? '#383838' : '#e0e0e0',
-        drawerItemStyle: { borderRadius: 10, marginHorizontal: 10, marginVertical: 4 },
         headerTitle: '',
+        drawerItemStyle: { display: 'none' },
       })}
     >
       {/* ...Screens... */}
       <Drawer.Screen name="Home" component={HomeScreen} options={{ title: 'Home', drawerIcon: ({ focused, color, size }) => <MaterialCommunityIcons name={focused ? 'home' : 'home-outline'} color={color} size={size} /> }} />
-      <Drawer.Screen name="PatientEducation" component={PatientEducationScreen} options={{ title: 'Patient Education', drawerIcon: ({ focused, color, size }) => <MaterialCommunityIcons name={focused ? 'book-open-page-variant' : 'book-open-page-variant-outline'} color={color} size={size} /> }} />
-      <Drawer.Screen name="TreatmentGallery" component={TreatmentGalleryScreen} options={{ title: 'Treatment Gallery', drawerIcon: ({ focused, color, size }) => <MaterialCommunityIcons name={focused ? 'image-multiple' : 'image-multiple-outline'} color={color} size={size} /> }} />
+      <Drawer.Screen name="PatientEducation" component={PatientEducationScreen} options={{ title: 'Education', drawerIcon: ({ focused, color, size }) => <MaterialCommunityIcons name={focused ? 'book-open-page-variant' : 'book-open-page-variant-outline'} color={color} size={size} /> }} />
+      <Drawer.Screen name="TreatmentGallery" component={TreatmentGalleryScreen} options={{ title: 'Gallery', drawerIcon: ({ focused, color, size }) => <MaterialCommunityIcons name={focused ? 'image-multiple' : 'image-multiple-outline'} color={color} size={size} /> }} />
       <Drawer.Screen name="DentalApp" component={DentalAppScreen} options={{ title: 'Dental App', drawerIcon: ({ focused, color, size }) => <MaterialCommunityIcons name={focused ? 'cellphone' : 'cellphone-wireless'} color={color} size={size} /> }} />
       <Drawer.Screen name="Games" component={GamesScreen} options={{ title: 'Games', drawerIcon: ({ focused, color, size }) => <MaterialCommunityIcons name={focused ? 'gamepad-variant' : 'gamepad-variant-outline'} color={color} size={size} /> }} />
       <Drawer.Screen name="AboutUs" component={AboutUsScreen} options={{ title: 'About Us', drawerIcon: ({ focused, color, size }) => <MaterialCommunityIcons name={focused ? 'information' : 'information-outline'} color={color} size={size} /> }} />
@@ -220,10 +216,10 @@ export default function App() {
 const styles = StyleSheet.create({
   rootContainer: { flex: 1 },
   headerLeftContainer: { flexDirection: 'row', alignItems: 'center' },
-  headerRightContainer: { flexDirection: 'row', alignItems: 'center', paddingRight: 15 },
-  headerButton: { marginLeft: 20 },
-  menuButton: { paddingHorizontal: 15 },
-  profileAvatar: { width: 32, height: 32, borderRadius: 16, marginLeft: 20 },
-  logoImage: { width: 120, height: 28, resizeMode: 'contain' },
-  collapsedDrawerItem: { height: 50, justifyContent: 'center', alignItems: 'center', marginVertical: 4, marginHorizontal: 10, borderRadius: 10 },
+  headerRightContainer: { flexDirection: 'row', alignItems: 'center', paddingRight: 16 },
+  headerButton: { marginLeft: 16 },
+  menuButton: { paddingHorizontal: 16 },
+  profileButton: { marginLeft: 16 },
+  profileAvatar: { width: 32, height: 32, borderRadius: 16 },
+  logoImage: { width: 105, height: 35, resizeMode: 'contain' },
 });
