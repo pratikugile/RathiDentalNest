@@ -19,6 +19,45 @@ export interface GalleryItem {
   createdAt?: string;
 }
 
+export interface TeamMember {
+  id: number;
+  name: string;
+  role: string;
+  qualification: string;
+  image_path: string;
+  display_order?: number;
+}
+
+export interface Testimonial {
+  id: number;
+  patient_name: string;
+  treatment_type: string;
+  content: string;
+  image_path?: string;
+  rating: number;
+}
+
+export interface FAQ {
+  id: number;
+  question: string;
+  answer: string;
+}
+
+export interface CareGuide {
+  id: number;
+  title: string;
+  content: string;
+}
+
+export interface Lead {
+  id: number;
+  name: string;
+  phone: string;
+  treatment_interest?: string;
+  status: 'pending' | 'contacted';
+  created_at: string;
+}
+
 // Education types
 export interface EducationTopic {
   id: string;
@@ -123,4 +162,13 @@ export type AdminStackParamList = {
   ManageGallery: undefined;
   AddGalleryItem: undefined;
   ManageAppointments: undefined;
+  ManageTeam: undefined;
+  AddTeamMember: undefined;
+  ManageTestimonials: undefined;
+  AddTestimonial: undefined;
+  ManageFAQs: undefined;
+  AddFAQ: undefined;
+  ManageCareGuides: undefined;
+  AddCareGuide: undefined;
+  ViewLeads: undefined;
 };

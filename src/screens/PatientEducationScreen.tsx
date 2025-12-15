@@ -31,7 +31,7 @@ const topics = [
   }
 ];
 
-const TopicItem = ({ topic, colors }) => {
+const TopicItem = ({ topic, colors }: { topic: any, colors: any }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const styles = themedStyles(colors);
 
@@ -65,7 +65,7 @@ function PatientEducationScreen() {
   );
 }
 
-const themedStyles = (colors) => StyleSheet.create({
+const themedStyles = (colors: any) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,

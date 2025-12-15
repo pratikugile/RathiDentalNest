@@ -32,7 +32,7 @@ const gamesData = [
   },
 ];
 
-const GameCard = ({ item, colors, onPlay }) => {
+const GameCard = ({ item, colors, onPlay }: { item: any, colors: any, onPlay: (packageName: string) => void }) => {
   const styles = themedStyles(colors);
   return (
     <TouchableOpacity style={styles.gameCard} onPress={() => onPlay(item.packageName)}>
@@ -56,10 +56,10 @@ function GamesScreen() {
   const { colors } = useTheme();
   const styles = themedStyles(colors);
 
-  const handlePlayGame = (packageName) => {
+  const handlePlayGame = (packageName: string) => {
     SendIntentAndroid.isAppInstalled(packageName).then(isInstalled => {
       if (isInstalled) {
-        SendIntentAndroid.openApp(packageName).catch(err => {
+        SendIntentAndroid.openApp(packageName, {}).catch(err => {
           console.log(err);
           Alert.alert('Error', 'Could not open the game. Please try again.');
         });
@@ -87,7 +87,7 @@ function GamesScreen() {
   );
 }
 
-const themedStyles = (colors) => StyleSheet.create({
+const themedStyles = (colors: any) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
