@@ -1,15 +1,17 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-import { AuthContext } from '../../../App'; // Adjust path to App.tsx
+import { useAuth } from '../../context/AuthContext';
+import { Colors } from '../../constants/colors';
 
-const AdminDashboardScreen = ({ navigation }) => {
-  const { colors } = useTheme();
+const AdminDashboardScreen = ({ navigation }: { navigation: any }) => {
+  const theme = useTheme();
+  const colors = theme.colors || Colors.light;
   const styles = themedStyles(colors);
-  const { user, setUser } = useContext(AuthContext);
+  const { user, logout } = useAuth();
 
   const handleLogout = () => {
-    setUser(null); // Clear user state to log out
+    logout(); // Clear user state to log out
   };
 
   return (
@@ -24,6 +26,27 @@ const AdminDashboardScreen = ({ navigation }) => {
         <Text style={styles.menuButtonText}>Manage Treatment Gallery</Text>
       </TouchableOpacity>
 
+      <TouchableOpacity 
+        style={styles.menuButton}
+        onPress={() => navigation.navigate('ManageFAQs')}
+      >
+        <Text style={styles.menuButtonText}>Manage FAQs</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity 
+        style={styles.menuButton}
+        onPress={() => navigation.navigate('ManageCareGuides')}
+      >
+        <Text style={styles.menuButtonText}>Manage Care Guides</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity 
+        style={styles.menuButton}
+        onPress={() => navigation.navigate('ViewLeads')}
+      >
+        <Text style={styles.menuButtonText}>View Patient Leads</Text>
+      </TouchableOpacity>
+
       {/* Add other admin actions here */}
 
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
@@ -33,7 +56,7 @@ const AdminDashboardScreen = ({ navigation }) => {
   );
 };
 
-const themedStyles = (colors) => StyleSheet.create({
+const themedStyles = (colors: any) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,

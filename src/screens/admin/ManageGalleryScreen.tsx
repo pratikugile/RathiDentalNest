@@ -3,9 +3,11 @@ import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, Alert } from
 import { useTheme, useIsFocused } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { getGalleryItems, deleteGalleryItem } from '../../services/Database';
+import { Colors } from '../../constants/colors';
 
 const ManageGalleryScreen = ({ navigation }) => {
-  const { colors } = useTheme();
+  const theme = useTheme();
+  const colors = theme.colors || Colors.light;
   const styles = themedStyles(colors);
   const [items, setItems] = useState([]);
   const isFocused = useIsFocused();

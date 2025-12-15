@@ -1,3 +1,7 @@
+import { LogBox } from 'react-native';
+// LogBox.ignoreLogs([
+// 	'setLayoutAnimationEnabledExperimental is currently a no-op',
+// ]);
 /**
  * @format
  */

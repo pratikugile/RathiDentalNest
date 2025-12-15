@@ -1,95 +1,8 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking, Platform } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
-const doctors = [
-  {
-    id: '1',
-    name: 'Dr. Nilesh Rathi',
-    credentials: 'BDS, MDS, Ph.D., FPO (Orthodontics)',
-    specialization: 'Pediatric Dentistry & Dental Implants',
-    experience: '19+ years Experience',
-    about: 'Dr. Nilesh Rathi is a Professor and Head at Dr. D.Y. Patil Dental College and Hospital, Pimpri, Pune. With 19 years of experience, he is specialised in advanced dental treatments for children and adults, using techniques like laughing gas for comfort and providing expertise in dental implants.',
-    education: [
-      'Bachelor in Dental Surgery, 2004',
-      'Master in Dental Surgery, 2009',
-      'Ph.D., 2017',
-      'Fellow in Pediatric Orthodontics, 2018',
-    ],
-    achievements: [
-      'Holds multiple design patents and copyrights',
-      'Contributed chapters to various textbooks',
-      'Published over 85 research papers',
-      'Expert in aligners for malaligned teeth',
-      'Invited for guest lectures at National platforms',
-      'Member, Indian Dental Association',
-      'Member, Indian Society of Pediatric and Preventive Dentistry',
-      'Member, Indian Society of Oral Implant.',
-    ],
-    avatar: require('../assets/rathicrop.jpg')
-  },
-  {
-    id: '2',
-    name: 'Dr. Prithvi Rathi',
-    credentials: 'BDS, ALTS (Laser)',
-    specialization: 'Smile Designing & Laser Treatment',
-    experience: '17+ years Experience',
-    about: 'Dr. Prithvi Rathi excels in digital dentistry and laser treatments, delivering high-quality esthetic outcomes with painless procedures. Her innovative approach ensures impeccable results using advanced laser technology.',
-    education: [
-      'Bachelor in Dental Surgery, 2008',
-      'Fellowship in Laser Dentistry',
-    ],
-    achievements: [
-      'Received BIRAC BIG Grants for dental equipment innovation',
-      'Mastered digital dentistry for esthetic outcomes',
-      'Expert in laser treatments',
-      'Member, Indian Dental Association',
-    ],
-    avatar: require('../assets/DrPrithviRathi.jpeg')
-  }
-];
-
-const CollapsibleSection = ({ title, items, colors }) => {
-  const [isCollapsed, setIsCollapsed] = useState(true);
-  const styles = themedStyles(colors);
-
-  return (
-    <View style={styles.collapsibleContainer}>
-      <TouchableOpacity style={styles.collapsibleHeader} onPress={() => setIsCollapsed(!isCollapsed)}>
-        <Text style={styles.collapsibleTitle}>{title}</Text>
-        <MaterialCommunityIcons name={isCollapsed ? 'chevron-down' : 'chevron-up'} color={colors.text} size={24} />
-      </TouchableOpacity>
-      {!isCollapsed && (
-        <View style={styles.collapsibleContent}>
-          {items.map((item, index) => (
-            <Text key={index} style={styles.listItem}>• {item}</Text>
-          ))}
-        </View>
-      )}
-    </View>
-  );
-};
-
-const DoctorProfile = ({ doctor, colors }) => {
-  const styles = themedStyles(colors);
-  return (
-    <View style={styles.doctorCard}>
-      <Image source={doctor.avatar} style={styles.avatar} />
-      <Text style={styles.doctorName}>{doctor.name}</Text>
-      <Text style={styles.doctorCredentials}>{doctor.credentials}</Text>
-      <Text style={styles.doctorExperience}>{doctor.experience}</Text>
-      <View style={styles.specializationChip}>
-        <Text style={styles.specializationText}>{doctor.specialization}</Text>
-      </View>
-
-      <Text style={styles.aboutDoctor}>{doctor.about}</Text>
-
-      <CollapsibleSection title="Education" items={doctor.education} colors={colors} />
-      <CollapsibleSection title="Achievements & Memberships" items={doctor.achievements} colors={colors} />
-    </View>
-  );
-};
+import LinearGradient from 'react-native-linear-gradient';
 
 function AboutUsScreen() {
   const { colors } = useTheme();
@@ -98,21 +11,190 @@ function AboutUsScreen() {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Our Expert Dentists</Text>
-        <Text style={styles.headerSubtitle}>Our highly skilled doctors combine years of experience with the latest dental techniques to provide exceptional care.</Text>
+        <Text style={styles.headerTitle}>About Rathi Dental Nest</Text>
+        <Text style={styles.headerSubtitle}>Excellence in Dental Care for the Whole Family</Text>
       </View>
-      
-      {doctors.map(doc => <DoctorProfile key={doc.id} doctor={doc} colors={colors} />)}
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Our Mission</Text>
+        <Text style={styles.sectionText}>
+          At Rathi Dental Nest, our mission is to provide world-class dental treatments in a comfortable and hygienic environment. We specialize in Pediatric Dentistry, Dental Implants, and Laser Dentistry, ensuring the best care for both children and adults.
+        </Text>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Why Choose Us?</Text>
+        <View style={styles.featureRow}>
+           <MaterialCommunityIcons name="tooth-outline" size={24} color={colors.primary} />
+           <Text style={styles.featureText}>Advanced Laser Technology</Text>
+        </View>
+        <View style={styles.featureRow}>
+           <MaterialCommunityIcons name="baby-face-outline" size={24} color={colors.primary} />
+           <Text style={styles.featureText}>Child-Friendly Environment</Text>
+        </View>
+        <View style={styles.featureRow}>
+           <MaterialCommunityIcons name="shield-check-outline" size={24} color={colors.primary} />
+           <Text style={styles.featureText}>19+ Years of Experience</Text>
+        </View>
+        <View style={styles.featureRow}>
+           <MaterialCommunityIcons name="clock-outline" size={24} color={colors.primary} />
+           <Text style={styles.featureText}>Timely Appointments</Text>
+        </View>
+        <View style={styles.featureRow}>
+           <MaterialCommunityIcons name="hospital-box-outline" size={24} color={colors.primary} />
+           <Text style={styles.featureText}>State-of-the-art Infrastructure</Text>
+        </View>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Our Clinic</Text>
+        <Text style={styles.sectionText}>
+          Located in the heart of the city, Rathi Dental Nest is equipped with the latest dental technology to ensure precise and painless treatments. Our team of dedicated professionals is committed to delivering the highest standard of dental care.
+        </Text>
+      </View>
+
+      <View style={styles.contactContainer}>
+        <Text style={styles.contactTitle}>Get in Touch</Text>
+        <View style={styles.quickLinksContainer}>
+          <TouchableOpacity style={styles.quickLinkButton} onPress={() => Linking.openURL('tel:+911234567890')}>
+            <LinearGradient colors={['#4CAF50', '#2E7D32']} style={styles.quickLinkGradient}>
+              <MaterialCommunityIcons name="phone" size={24} color="#fff" />
+              <Text style={styles.quickLinkText}>Call Us</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.quickLinkButton} onPress={() => {
+             const scheme = Platform.select({ ios: 'maps:0,0?q=', android: 'geo:0,0?q=' });
+             const latLng = '18.5204,73.8567';
+             const label = 'Rathi Dental Nest';
+             const url = Platform.select({
+               ios: `${scheme}${label}@${latLng}`,
+               android: `${scheme}${latLng}(${label})`
+             });
+             if (url) Linking.openURL(url);
+          }}>
+            <LinearGradient colors={['#2196F3', '#1565C0']} style={styles.quickLinkGradient}>
+              <MaterialCommunityIcons name="map-marker" size={24} color="#fff" />
+              <Text style={styles.quickLinkText}>Locate Us</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      <View style={styles.qrContainer}>
+        <Text style={styles.qrTitle}>Scan to Download App</Text>
+        <View style={styles.qrPlaceholder}>
+          <MaterialCommunityIcons name="qrcode-scan" size={100} color={colors.text} />
+        </View>
+        <Text style={styles.qrSubtitle}>Share this QR code with patients to download the app.</Text>
+      </View>
 
     </ScrollView>
   );
 }
 
 // Styles are now a function that accepts colors
-const themedStyles = (colors) => StyleSheet.create({
+const themedStyles = (colors: any) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
+  },
+  section: {
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  sectionTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: colors.text,
+    marginBottom: 10,
+  },
+  sectionText: {
+    fontSize: 16,
+    color: colors.text,
+    lineHeight: 24,
+    opacity: 0.8,
+  },
+  featureRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  featureText: {
+    fontSize: 16,
+    color: colors.text,
+    marginLeft: 12,
+    fontWeight: '500',
+  },
+  qrContainer: {
+    alignItems: 'center',
+    padding: 20,
+    backgroundColor: colors.card,
+    margin: 15,
+    borderRadius: 12,
+    marginBottom: 40,
+  },
+  qrTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: colors.text,
+    marginBottom: 15,
+  },
+  qrPlaceholder: {
+    width: 150,
+    height: 150,
+    backgroundColor: colors.background,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: colors.border,
+    marginBottom: 15,
+  },
+  qrSubtitle: {
+    fontSize: 14,
+    color: colors.text,
+    opacity: 0.7,
+    textAlign: 'center',
+  },
+  contactContainer: {
+    padding: 20,
+    alignItems: 'center',
+    marginBottom: 30,
+  },
+  contactTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: colors.text,
+    marginBottom: 15,
+  },
+  quickLinksContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 16,
+    width: '100%',
+  },
+  quickLinkButton: {
+    flex: 1,
+    maxWidth: 200,
+    borderRadius: 12,
+    overflow: 'hidden',
+    elevation: 3,
+    marginHorizontal: 10,
+  },
+  quickLinkGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+  },
+  quickLinkText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginLeft: 8,
   },
   header: {
     padding: 20,
@@ -134,94 +216,6 @@ const themedStyles = (colors) => StyleSheet.create({
     marginTop: 5,
     textAlign: 'center',
   },
-  doctorCard: {
-    backgroundColor: colors.card,
-    borderRadius: 12,
-    padding: 20,
-    marginHorizontal: 15,
-    marginVertical: 10,
-    alignItems: 'center',
-  },
-  avatar: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    borderWidth: 3,
-    borderColor: colors.border,
-    marginBottom: 15,
-  },
-  doctorName: {
-    color: colors.text,
-    fontSize: 22,
-    fontWeight: 'bold',
-  },
-  doctorCredentials: {
-    color: colors.text,
-    opacity: 0.6,
-    fontSize: 14,
-    fontStyle: 'italic',
-    textAlign: 'center',
-    marginTop: 2,
-  },
-  doctorExperience: {
-    color: colors.primary,
-    fontSize: 15,
-    fontWeight: '600',
-    marginTop: 10,
-    backgroundColor: colors.border,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 6,
-    overflow: 'hidden'
-  },
-  specializationChip: {
-    backgroundColor: '#87CEEB',
-    borderRadius: 15,
-    paddingHorizontal: 15,
-    paddingVertical: 8,
-    marginTop: 15,
-  },
-  specializationText: {
-    color: '#0f0f0f',
-    fontSize: 14,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  aboutDoctor: {
-    color: colors.text,
-    opacity: 0.8,
-    fontSize: 16,
-    lineHeight: 24,
-    textAlign: 'center',
-    marginTop: 20,
-  },
-  collapsibleContainer: {
-    width: '100%',
-    marginTop: 20,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
-  },
-  collapsibleHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 15,
-  },
-  collapsibleTitle: {
-    color: colors.text,
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  collapsibleContent: {
-    paddingBottom: 10,
-  },
-  listItem: {
-    color: colors.text,
-    opacity: 0.7,
-    fontSize: 15,
-    lineHeight: 22,
-    marginBottom: 5,
-  }
 });
 
 export default AboutUsScreen;

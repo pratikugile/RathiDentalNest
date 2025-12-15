@@ -3,7 +3,8 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, ScrollView,
 import { useTheme } from '@react-navigation/native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { addGalleryItem, saveImageToAppDirectory } from '../../services/Database';
+import { addGalleryItem } from '../../services/Database';
+import { saveImageToAppDirectory } from '../../utils/fileSystem';
 
 const AddGalleryItemScreen = ({ navigation }) => {
   const { colors } = useTheme();

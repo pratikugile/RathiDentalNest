@@ -1,20 +1,21 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Animated, Easing, Platform, UIManager } from 'react-native';
+import { View, Text, StyleSheet, Pressable, ScrollView, Animated, Easing, Platform, UIManager } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
-  UIManager.setLayoutAnimationEnabledExperimental(true);
-}
+// if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
+//   UIManager.setLayoutAnimationEnabledExperimental(true);
+// }
 
 const CustomDrawerContent = (props: any) => {
   const { state, descriptors, navigation } = props;
   const { colors } = useTheme();
 
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(true);
 
   // Animated values per item for staggered vertical slide
   const itemsAnimRef = useRef<Animated.Value[]>(state.routes.map(() => new Animated.Value(menuOpen ? 1 : 0)));
+
 
   // Keep anim array in sync if routes change
   useEffect(() => {
@@ -54,15 +55,29 @@ const CustomDrawerContent = (props: any) => {
     <ScrollView style={[styles.container, { backgroundColor: colors.card }]} showsVerticalScrollIndicator={false}>
       {/* In-drawer hamburger placed above the first item */}
       <View style={styles.hamburgerRow}>
-        <TouchableOpacity onPress={toggleMenu} style={styles.hamburgerButton} accessibilityLabel="Toggle menu">
+        <Pressable
+          onPress={toggleMenu}
+          style={({ pressed }) => [
+            styles.hamburgerButton,
+            pressed && { backgroundColor: 'rgba(255, 255, 255, 0.1)' },
+          ]}
+          accessibilityLabel="Toggle menu"
+        >
           <Icon name="menu" size={28} color={colors.text} />
-        </TouchableOpacity>
+        </Pressable>
       </View>
 
       <View style={styles.list}>
         {state.routes.map((route: any, index: number) => {
           const { options } = descriptors[route.key];
           if (options.drawerItemStyle?.height === 0) return null;
+
+          // Add a divider after the 'Home' item
+          if (index === 1) {
+            return (
+              <View key="divider-1" style={styles.divider} />
+            );
+          }
 
           const isFocused = state.index === index;
           const label = options.title || route.name;
@@ -84,20 +99,34 @@ const CustomDrawerContent = (props: any) => {
 
           // Always render collapsed layout (icon above label) for compact drawer.
           // The hamburger will only toggle visibility/animation of labels (slide down + fade).
-          const itemStyle = [styles.itemCollapsed, isFocused && { backgroundColor: `${colors.primary}18` }];
+          const itemStyle = [
+            styles.itemCollapsed,
+            isFocused && {
+              backgroundColor: `${colors.primary}20`,
+              borderLeftWidth: 3,
+              borderLeftColor: colors.primary,
+            },
+          ];
 
           return (
-            <TouchableOpacity key={route.key} onPress={onPress} style={itemStyle} activeOpacity={0.75}>
+            <Pressable
+              key={route.key}
+              onPress={onPress}
+              style={({ pressed }) => [
+                itemStyle,
+                pressed && { backgroundColor: 'rgba(255, 255, 255, 0.1)' },
+              ]}
+            >
               {/* Icon always visible and centered */}
               <View style={styles.iconBox}>{renderIcon(options, isFocused)}</View>
 
               {/* Label is always rendered under the icon; its visibility is animated. */}
-              <Animated.View style={[styles.collapsedWrapper, { opacity: labelOpacity, transform: [{ translateY: labelTranslateY }] }]}> 
+              <Animated.View style={[styles.collapsedWrapper, { opacity: labelOpacity, transform: [{ translateY: labelTranslateY }] }]}>
                 <Text style={[styles.collapsedLabelText, { color: isFocused ? colors.primary : colors.text }]} numberOfLines={1}>
                   {label}
                 </Text>
               </Animated.View>
-            </TouchableOpacity>
+            </Pressable>
           );
         })}
       </View>
@@ -107,11 +136,43 @@ const CustomDrawerContent = (props: any) => {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  hamburgerRow: { paddingVertical: 12, alignItems: 'center', borderBottomWidth: 1, borderBottomColor: '#e6e6e6' },
-  hamburgerButton: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center' },
+  hamburgerRow: {
+    paddingVertical: 12,
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(128, 128, 128, 0.2)',
+  },
+  hamburgerButton: {
+    width: 44,
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 22,
+  },
   list: { paddingVertical: 8 },
-  item: { flexDirection: 'row', alignItems: 'center', paddingVertical: 10, paddingHorizontal: 12, borderRadius: 8, marginHorizontal: 8, marginBottom: 6 },
-  itemCollapsed: { flexDirection: 'column', alignItems: 'center', paddingVertical: 8, paddingHorizontal: 8, marginBottom: 10 },
+  divider: {
+    height: 1,
+    backgroundColor: 'rgba(128, 128, 128, 0.2)',
+    marginVertical: 8,
+  },
+  item: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    marginHorizontal: 8,
+    marginBottom: 6,
+  },
+  itemCollapsed: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 8,
+    marginBottom: 10,
+    borderRadius: 8,
+    marginHorizontal: 4,
+  },
   iconBox: { width: 40, alignItems: 'center', justifyContent: 'center' },
   rowLabel: { flex: 1, justifyContent: 'center' },
   labelText: { fontSize: 15, fontWeight: '500' },
