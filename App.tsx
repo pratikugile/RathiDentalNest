@@ -21,6 +21,7 @@ import TestimonialsScreen from './src/screens/TestimonialsScreen';
 import FAQScreen from './src/screens/FAQScreen';
 import CareGuidesScreen from './src/screens/CareGuidesScreen';
 import RequestCallScreen from './src/screens/RequestCallScreen';
+import OTTScreen from './src/screens/OTTScreen';
 import CustomDrawerContent from './src/components/CustomDrawerContent';
 import Screensaver from './src/components/Screensaver';
 import { Colors } from './src/constants/colors';
@@ -50,6 +51,7 @@ export type AppDrawerParamList = {
   DentalApp: undefined;
   Games: undefined;
   AboutUs: undefined;
+  OTTScreen: undefined;
   Team: undefined;
   Testimonials: undefined;
   FAQs: undefined;
@@ -131,7 +133,7 @@ function UserApp() {
               </TouchableOpacity>
             )}
             {isLargeScreen && (
-              <Image source={require('./src/assets/logoRathi-light.png')} style={styles.logoImage} />
+              <Image source={require('./src/assets/logoRathi-light.jpeg')} style={styles.logoImage} />
             )}
           </View>
         ),
@@ -163,16 +165,12 @@ function UserApp() {
     >
       {/* ...Screens... */}
       <Drawer.Screen name="Home" component={HomeScreen} options={{ title: 'Home', drawerIcon: ({ focused, color, size }) => <MaterialCommunityIcons name={focused ? 'home' : 'home-outline'} color={color} size={size} /> }} />
-      <Drawer.Screen name="PatientEducation" component={PatientEducationScreen} options={{ title: 'Education', drawerIcon: ({ focused, color, size }) => <MaterialCommunityIcons name={focused ? 'book-open-page-variant' : 'book-open-page-variant-outline'} color={color} size={size} /> }} />
-      <Drawer.Screen name="TreatmentGallery" component={TreatmentGalleryScreen} options={{ title: 'Gallery', drawerIcon: ({ focused, color, size }) => <MaterialCommunityIcons name={focused ? 'image-multiple' : 'image-multiple-outline'} color={color} size={size} /> }} />
-      <Drawer.Screen name="DentalApp" component={DentalAppScreen} options={{ title: 'Dental App', drawerIcon: ({ focused, color, size }) => <MaterialCommunityIcons name={focused ? 'cellphone' : 'cellphone-wireless'} color={color} size={size} /> }} />
+      <Drawer.Screen name="PatientEducation" component={PatientEducationScreen} options={{ title: 'Patient education', drawerIcon: ({ focused, color, size }) => <MaterialCommunityIcons name={focused ? 'book-open-page-variant' : 'book-open-page-variant-outline'} color={color} size={size} /> }} />
+      <Drawer.Screen name="TreatmentGallery" component={TreatmentGalleryScreen} options={{ title: 'Treatment Gallery', drawerIcon: ({ focused, color, size }) => <MaterialCommunityIcons name={focused ? 'image-multiple' : 'image-multiple-outline'} color={color} size={size} /> }} />
+      <Drawer.Screen name="DentalApp" component={DentalAppScreen} options={{ title: 'App', drawerIcon: ({ focused, color, size }) => <MaterialCommunityIcons name={focused ? 'cellphone' : 'cellphone-wireless'} color={color} size={size} /> }} />
       <Drawer.Screen name="Games" component={GamesScreen} options={{ title: 'Games', drawerIcon: ({ focused, color, size }) => <MaterialCommunityIcons name={focused ? 'gamepad-variant' : 'gamepad-variant-outline'} color={color} size={size} /> }} />
-      <Drawer.Screen name="Team" component={TeamScreen} options={{ title: 'Our Team', drawerIcon: ({ focused, color, size }) => <MaterialCommunityIcons name={focused ? 'account-group' : 'account-group-outline'} color={color} size={size} /> }} />
-      <Drawer.Screen name="Testimonials" component={TestimonialsScreen} options={{ title: 'Success Stories', drawerIcon: ({ focused, color, size }) => <MaterialCommunityIcons name={focused ? 'star-face' : 'star-face-outline'} color={color} size={size} /> }} />
-      <Drawer.Screen name="FAQs" component={FAQScreen} options={{ title: 'FAQs', drawerIcon: ({ focused, color, size }) => <MaterialCommunityIcons name={focused ? 'help-circle' : 'help-circle-outline'} color={color} size={size} /> }} />
-      <Drawer.Screen name="CareGuides" component={CareGuidesScreen} options={{ title: 'Care Guides', drawerIcon: ({ focused, color, size }) => <MaterialCommunityIcons name={focused ? 'medical-bag' : 'medical-bag'} color={color} size={size} /> }} />
-      <Drawer.Screen name="RequestCall" component={RequestCallScreen} options={{ title: 'Request Call', drawerIcon: ({ focused, color, size }) => <MaterialCommunityIcons name={focused ? 'phone-in-talk' : 'phone-in-talk-outline'} color={color} size={size} /> }} />
-      <Drawer.Screen name="AboutUs" component={AboutUsScreen} options={{ title: 'About Us', drawerIcon: ({ focused, color, size }) => <MaterialCommunityIcons name={focused ? 'information' : 'information-outline'} color={color} size={size} /> }} />
+      <Drawer.Screen name="AboutUs" component={AboutUsScreen} options={{ title: 'About us', drawerIcon: ({ focused, color, size }) => <MaterialCommunityIcons name={focused ? 'information' : 'information-outline'} color={color} size={size} /> }} />
+      <Drawer.Screen name="OTTScreen" component={OTTScreen} options={{ title: 'Media', drawerIcon: ({ focused, color, size }) => <MaterialCommunityIcons name={focused ? 'video' : 'video-outline'} color={color} size={size} /> }} />
     </Drawer.Navigator>
   );
 }

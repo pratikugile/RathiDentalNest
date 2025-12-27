@@ -72,12 +72,8 @@ const CustomDrawerContent = (props: any) => {
           const { options } = descriptors[route.key];
           if (options.drawerItemStyle?.height === 0) return null;
 
-          // Add a divider after the 'Home' item
-          if (index === 1) {
-            return (
-              <View key="divider-1" style={styles.divider} />
-            );
-          }
+          // Optionally render a divider after the 'Home' item (index 1)
+          const divider = index === 1 ? <View key={`divider-${index}`} style={styles.divider} /> : null;
 
           const isFocused = state.index === index;
           const label = options.title || route.name;
@@ -109,24 +105,27 @@ const CustomDrawerContent = (props: any) => {
           ];
 
           return (
-            <Pressable
-              key={route.key}
-              onPress={onPress}
-              style={({ pressed }) => [
-                itemStyle,
-                pressed && { backgroundColor: 'rgba(255, 255, 255, 0.1)' },
-              ]}
-            >
-              {/* Icon always visible and centered */}
-              <View style={styles.iconBox}>{renderIcon(options, isFocused)}</View>
+            <>
+              {divider}
+              <Pressable
+                key={route.key}
+                onPress={onPress}
+                style={({ pressed }) => [
+                  itemStyle,
+                  pressed && { backgroundColor: 'rgba(255, 255, 255, 0.1)' },
+                ]}
+              >
+                {/* Icon always visible and centered */}
+                <View style={styles.iconBox}>{renderIcon(options, isFocused)}</View>
 
-              {/* Label is always rendered under the icon; its visibility is animated. */}
-              <Animated.View style={[styles.collapsedWrapper, { opacity: labelOpacity, transform: [{ translateY: labelTranslateY }] }]}>
-                <Text style={[styles.collapsedLabelText, { color: isFocused ? colors.primary : colors.text }]} numberOfLines={1}>
-                  {label}
-                </Text>
-              </Animated.View>
-            </Pressable>
+                {/* Label is always rendered under the icon; its visibility is animated. */}
+                <Animated.View style={[styles.collapsedWrapper, { opacity: labelOpacity, transform: [{ translateY: labelTranslateY }] }]}>
+                  <Text style={[styles.collapsedLabelText, { color: isFocused ? colors.primary : colors.text }]} numberOfLines={1}>
+                    {label}
+                  </Text>
+                </Animated.View>
+              </Pressable>
+            </>
           );
         })}
       </View>

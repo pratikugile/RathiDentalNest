@@ -39,7 +39,7 @@ function LoginScreen() {
     >
       <View style={styles.container}>
         <Image 
-          source={require('../assets/logoRathi-light.png')} 
+          source={require('../assets/logoRathi-light.jpeg')} 
           style={[styles.logo, dark ? styles.logoDark : styles.logoLight]} 
         />
         <Text style={styles.title}>Welcome Back</Text>

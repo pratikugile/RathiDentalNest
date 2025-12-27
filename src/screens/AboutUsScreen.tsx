@@ -1,8 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking, Platform } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking, Platform, Dimensions } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
+import Video from 'react-native-video';
+
+const { width } = Dimensions.get('window');
 
 function AboutUsScreen() {
   const { colors } = useTheme();
@@ -14,6 +17,19 @@ function AboutUsScreen() {
         <Text style={styles.headerTitle}>About Rathi Dental Nest</Text>
         <Text style={styles.headerSubtitle}>Excellence in Dental Care for the Whole Family</Text>
       </View>
+
+      {/* <View style={styles.videoSection}>
+        <Text style={styles.sectionTitle}>Welcome to Our Clinic</Text>
+        <View style={styles.videoContainer}>
+          <Video
+            source={{ uri: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4' }} // TODO: Replace with actual website video URL
+            style={styles.video}
+            controls={true}
+            resizeMode="contain"
+            paused={true}
+          />
+        </View>
+      </View> */}
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Our Mission</Text>
@@ -215,6 +231,24 @@ const themedStyles = (colors: any) => StyleSheet.create({
     fontSize: 16,
     marginTop: 5,
     textAlign: 'center',
+  },
+  videoSection: {
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+    alignItems: 'center',
+  },
+  videoContainer: {
+    width: '100%',
+    height: 200,
+    backgroundColor: '#000',
+    borderRadius: 12,
+    overflow: 'hidden',
+    marginTop: 10,
+  },
+  video: {
+    width: '100%',
+    height: '100%',
   },
 });
 
