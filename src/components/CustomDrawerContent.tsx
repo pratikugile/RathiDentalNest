@@ -105,10 +105,9 @@ const CustomDrawerContent = (props: any) => {
           ];
 
           return (
-            <>
+            <React.Fragment key={route.key}>
               {divider}
               <Pressable
-                key={route.key}
                 onPress={onPress}
                 style={({ pressed }) => [
                   itemStyle,
