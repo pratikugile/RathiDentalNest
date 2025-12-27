@@ -38,9 +38,9 @@ function LoginScreen() {
       style={styles.gradientBg}
     >
       <View style={styles.container}>
-        <Image 
-          source={require('../assets/logoRathi-light.jpeg')} 
-          style={[styles.logo, dark ? styles.logoDark : styles.logoLight]} 
+        <Image
+          source={require('../assets/logoRathi-light.jpeg')}
+          style={styles.logo}
         />
         <Text style={styles.title}>Welcome Back</Text>
         <Text style={styles.subtitle}>Sign in to your account</Text>
@@ -102,12 +102,7 @@ const themedStyles = (colors: Theme['colors']) => StyleSheet.create({
     alignSelf: 'center',
     marginBottom: 30,
   },
-  logoDark: {
-    tintColor: '#fff',
-  },
-  logoLight: {
-    tintColor: '#000',
-  },
+  
   title: {
     fontSize: 32,
     fontWeight: 'bold',
