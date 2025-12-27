@@ -140,23 +140,10 @@ function UserApp() {
         headerRight: () => (
           <View style={styles.headerRightContainer}>
             <View style={styles.iconButtonWrapper}>
-              <TouchableOpacity style={styles.headerButton}>
-                <MaterialCommunityIcons name="magnify" color={isDarkTheme ? '#fff' : '#000'} size={24} />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.iconButtonWrapper}>
               <TouchableOpacity style={styles.headerButton} onPress={toggleTheme}>
                 <MaterialCommunityIcons name={isDarkTheme ? 'white-balance-sunny' : 'moon-waning-crescent'} color={isDarkTheme ? '#fff' : '#000'} size={24} />
               </TouchableOpacity>
             </View>
-            <View style={styles.iconButtonWrapper}>
-              <TouchableOpacity style={styles.headerButton}>
-                <MaterialCommunityIcons name="bell-outline" color={isDarkTheme ? '#fff' : '#000'} size={24} />
-              </TouchableOpacity>
-            </View>
-            <TouchableOpacity style={styles.profileButton}>
-              <Image source={{ uri: 'https://i.pravatar.cc/150?u=profile' }} style={styles.profileAvatar} />
-            </TouchableOpacity>
           </View>
         ),
         headerTitle: '',
