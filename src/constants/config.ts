@@ -14,7 +14,7 @@ export const AppConfig = {
   // Storage
   STORAGE_KEYS: {
     USER_TOKEN: '@rathi_dental_token',
-    USER_DATA: '@rathi_dental_user',
+    USER_DATA: 'user',//'@rathi_dental_user',
     THEME_MODE: '@rathi_dental_theme',
     NOTIFICATIONS_ENABLED: '@rathi_dental_notifications',
   },

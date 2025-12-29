@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, PermissionsAndroid, Platform, Image, useWindowDimensions, Linking } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, PermissionsAndroid, Platform, Image, useWindowDimensions, Linking, Alert } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import RNFS, { ReadDirItem } from 'react-native-fs';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -120,37 +120,59 @@ function HomeScreen({ navigation }: any) {
   const numColumns = getGridColumns(dimensions.width);
   const styles = themedStyles(colors, availableWidth, numColumns);
   const [videos, setVideos] = useState<ReadDirItem[]>([]);
+  const [permissionRequested, setPermissionRequested] = useState(false);
 
   useEffect(() => {
     const scanForVideos = async () => {
       if (Platform.OS === 'android') {
         try {
-          const granted = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-            {
-              title: 'Storage Permission Needed',
-              message: 'This app needs access to your storage to find videos.',
-              buttonNeutral: 'Ask Me Later',
-              buttonNegative: 'Cancel',
-              buttonPositive: 'OK',
-            },
-          );
-          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-            const videoDir = RNFS.ExternalStorageDirectoryPath + '/Movies';
-            const items = await RNFS.readDir(videoDir);
-            const videoFiles = items.filter(item => item.isFile() && item.name.endsWith('.mp4'));
-            setVideos(videoFiles);
-          } else {
-            console.log('Storage permission denied');
+          console.log('Checking storage permission...');
+          const isGranted = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE);
+          console.log('Permission already granted:', isGranted);
+          if (!isGranted && !permissionRequested) {
+            setPermissionRequested(true);
+            console.log('Requesting storage permission...');
+            const granted = await PermissionsAndroid.request(
+              PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+              {
+                title: 'Storage Permission Needed',
+                message: 'This app needs access to your storage to find videos.',
+                buttonNeutral: 'Ask Me Later',
+                buttonNegative: 'Cancel',
+                buttonPositive: 'OK',
+              },
+            );
+            console.log('Permission result:', granted);
+            if (granted === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
+              Alert.alert(
+                'Permission Required',
+                'Storage permission is required to access videos. Please enable it in the app settings.',
+                [
+                  { text: 'Cancel', style: 'cancel' },
+                  { text: 'Open Settings', onPress: () => Linking.openSettings() },
+                ],
+              );
+              return;
+            }
+            if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+              console.log('Storage permission denied');
+              return;
+            }
           }
+          console.log('Permission granted. Scanning for videos...');
+          const videoDir = RNFS.ExternalStorageDirectoryPath + '/Movies';
+          const items = await RNFS.readDir(videoDir);
+          const videoFiles = items.filter(item => item.isFile() && item.name.endsWith('.mp4'));
+          console.log('Videos found:', videoFiles);
+          setVideos(videoFiles);
         } catch (err) {
-          console.warn(err);
+          console.warn('Error while requesting permission or scanning videos:', err);
         }
       }
     };
 
     scanForVideos();
-  }, []);
+  }, [permissionRequested]);
 
   const handleVideoPress = (video: ReadDirItem) => {
     navigation.navigate('VideoPlayer', { videoPath: video.path });

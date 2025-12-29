@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { TouchableOpacity, View, StyleSheet, Image, useWindowDimensions } from 'react-native';
+import { TouchableOpacity, View, StyleSheet, Image, useWindowDimensions, ActivityIndicator } from 'react-native';
 import { NavigationContainer, DarkTheme, DefaultTheme } from '@react-navigation/native';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -205,16 +205,25 @@ function AppNavigator() {
 }
 
 function AppContent() {
-    const { isDarkTheme } = useTheme();
-    const theme = isDarkTheme ? DarkAppTheme : LightAppTheme;
-    
+  const { isDarkTheme } = useTheme();
+  const { isLoading } = useAuth();
+  const theme = isDarkTheme ? DarkAppTheme : LightAppTheme;
+
+  if (isLoading) {
     return (
-        <NavigationContainer theme={theme}>
-          <Screensaver>
-            <AppNavigator />
-          </Screensaver>
-        </NavigationContainer>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color={theme.colors.primary} />
+      </View>
     );
+  }
+
+  return (
+    <NavigationContainer theme={theme}>
+      <Screensaver>
+        <AppNavigator />
+      </Screensaver>
+    </NavigationContainer>
+  );
 }
 
 // --- App Entry Point ---

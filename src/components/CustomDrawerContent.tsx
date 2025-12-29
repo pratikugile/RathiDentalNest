@@ -123,8 +123,8 @@ const CustomDrawerContent = (props: any) => {
                     {label}
                   </Text>
                 </Animated.View>
-              </Pressable>
-            </>
+                </Pressable>
+              </React.Fragment>
           );
         })}
       </View>

@@ -111,28 +111,23 @@ export const getUserByEmailAndPassword = (email: string, password: string): Prom
     db.transaction(tx => {
       tx.executeSql(
         'SELECT * FROM users WHERE email = ? AND password = ?',
-        [email, password], // Case sensitive for email now to distinguish 'user' and 'User'
+        [email, password],
         (tx, results) => {
           if (results.rows.length > 0) {
-            const row = results.rows.item(0);
-            // Validate and map to User interface
-            if (row && row.id && row.email && row.password && row.role) {
-              const user: User = {
-                id: row.id,
-                email: row.email,
-                password: row.password,
-                role: row.role,
-                createdAt: row.createdAt,
-              };
-              resolve(user);
-            } else {
-              resolve(null);
-            }
+            const user = results.rows.item(0);
+            resolve({
+              id: user.id,
+              email: user.email,
+              password: user.password,
+              role: user.role,
+              createdAt: user.created_at || new Date().toISOString(),
+            });
           } else {
             resolve(null);
           }
         },
         (tx, error) => {
+          console.error('Error fetching user:', error);
           reject(error);
         }
       );

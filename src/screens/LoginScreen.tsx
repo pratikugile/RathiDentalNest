@@ -21,6 +21,8 @@ function LoginScreen() {
     }
     try {
       const user = await getUserByEmailAndPassword(email, password);
+      console.log('User fetched:', user);
+      
       if (user) {
         setUser(user);
       } else {
